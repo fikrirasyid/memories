@@ -48,9 +48,19 @@ class Memories_Setup{
 	function activation(){
 		if( !wp_next_scheduled( 'daily_memories' ) ){
 			// Register the schedule a minute after now, so user can feel the result rightaway
-			$a_minute_after_now = current_time( 'timestamp', wp_timezone_override_offset() ) + 60;
+			$current_time = current_time( 'timestamp' );
+
+			// Get today's 01:00 timestamp
+			$today = mktime( 1, 0, 0, date( 'n', $current_time ), date( 'j', $current_time ), date( 'Y', $current_time ) );
+
+			// Applying offset
+			$timezone_offset = wp_timezone_override_offset();
 			
-			wp_schedule_event( $a_minute_after_now, 'daily', 'daily_memories' );
+			if( $timezone_offset ){
+				$today = $today - ( $timezone_offset * 60 * 60 );
+			}
+			
+			wp_schedule_event( $today, 'daily', 'daily_memories' );
 		}
 	}
 
