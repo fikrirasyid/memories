@@ -86,14 +86,16 @@ class Memories_Setup{
 		$today_posts = $this->memories->get_today_posts();
 
 		// Setup subject
-		$subject 	= sprintf( __( '%s %s Today (%s) in History', 'memories' ), get_bloginfo( 'name' ), ngettext( 'Post', 'Posts', $today_posts->post_count ), date( 'F j', current_time( 'timestamp' ) ));
+		$subject 	= sprintf( __( '%s %s Today (%s) in History', 'memories' ), get_bloginfo( 'name' ), ngettext( 'Post', 'Posts', $today_posts->post_count ), date( 'F j, Y', current_time( 'timestamp' ) ));
+
+		$message = '<h4>'. sprintf( __( 'Hi, %s published in this blog today (<cite>%s</cite>) in history. Have a good time with it.', 'memories' ), ngettext( 'this is post that was', 'these are posts that were', $today_posts->post_count ), date( 'F j', current_time( 'timestamp' ) ) ) .'</h4>';
 
 		ob_start();
 
 			// Display today's posts content
 			$this->templates->today_posts( $today_posts );
 
-		$message = ob_get_clean();
+		$message .= ob_get_clean();
 
 		add_filter( 'wp_mail_content_type', array( $this, 'html_content_type' ) );
 

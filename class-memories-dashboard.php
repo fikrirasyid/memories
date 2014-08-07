@@ -37,7 +37,8 @@ class Memories_Dashboard{
 		?>
 		<div class="wrap">
 			<h2><?php _e( 'Memories', 'memories' ); ?></h2>
-			<p><?php printf( __( 'Hi, %s published in this blog today (<cite>%s</cite>) in history:', 'memories' ), ngettext( 'this is post that is', 'these are posts that are', $today_posts->post_count ), date( 'l, F j, Y', current_time( 'timestamp' ) ) ); ?></p>
+			<h4><?php printf( __( 'Hi, %s published in this blog today (<cite>%s</cite>) in history. We will send you an email to <code>%s</code> every morning.', 'memories' ), ngettext( 'this is post that was', 'these are posts that were', $today_posts->post_count ), date( 'l, F j, Y', current_time( 'timestamp' ) ), get_bloginfo( 'admin_email' ) ); ?></h4>
+			<p><?php _e( 'Note: We are sending the email that is used on <code>Dashboard &rarr; Settings &rarr; General &rarr; E-mail Address</code>.', 'memories' ); ?></p>
 
 			<?php 
 				// Display today's posts content
