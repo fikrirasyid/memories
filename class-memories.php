@@ -27,9 +27,8 @@ class Memories{
 		// $month = array_rand( range( 1, 12 ) );
 
 		$posts 	= $this->get_posts( $day, $month );
-		$posts_grouped = $this->group_by_year( $posts );
 
-		return $posts_grouped;
+		return $posts;
 	}
 
 	/**
@@ -38,7 +37,7 @@ class Memories{
 	 * @return obj
 	 */
 	function get_posts( $day = 1, $month = 1 ){
-		$posts = get_posts( array(
+		$posts = new WP_Query( array(
 			'date_query' => array(
 				array(
 					'day'	=> $day,
@@ -47,26 +46,7 @@ class Memories{
 			)
 		) );
 
-		return $posts;
-	}
-
-	/**
-	 * Group posts by year
-	 * 
-	 * @return array
-	 */
-	function group_by_year( $items ){
-		// Prepare to catch the items
-		$posts = array();
-
-		if( !empty( $items ) ){
-
-			foreach ( $items as $item ) {
-
-				$posts[date( 'Y', strtotime( $item->post_date ) )][$item->ID] = $item;
-
-			}
-		}
+		$posts->year = 0;
 
 		return $posts;
 	}
