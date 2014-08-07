@@ -31,15 +31,15 @@ class Memories_Dashboard{
 	 * @return void
 	 */
 	function page(){
+		// Get today's posts
+		$today_posts = $this->memories->get_today_posts();
+
 		?>
 		<div class="wrap">
 			<h2><?php _e( 'Memories', 'memories' ); ?></h2>
-			<p><?php printf( __( 'Hi, this is what is being posted in this blog today (<cite>%s</cite>) in history:', 'memories' ), date( 'l, F j, Y', current_time( 'timestamp' ) ) ); ?></p>
+			<p><?php printf( __( 'Hi, %s published in this blog today (<cite>%s</cite>) in history:', 'memories' ), ngettext( 'this is post that is', 'these are posts that are', $today_posts->post_count ), date( 'l, F j, Y', current_time( 'timestamp' ) ) ); ?></p>
 
 			<?php 
-				// Get today's posts
-				$today_posts = $this->memories->get_today_posts();
-
 				// Display today's posts content
 				$this->templates->today_posts( $today_posts );
 			?>

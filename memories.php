@@ -55,7 +55,7 @@ class Memories_Setup{
 
 			// Applying offset
 			$timezone_offset = wp_timezone_override_offset();
-			
+
 			if( $timezone_offset ){
 				$today = $today - ( $timezone_offset * 60 * 60 );
 			}
@@ -79,14 +79,16 @@ class Memories_Setup{
 	 * @return void
 	 */
 	function daily_email(){
+		// Setup email destination
 		$to 		= get_option( 'admin_email' );
 
-		$subject 	= __( 'Your post today in history', 'memories' );
+		// Get today's posts
+		$today_posts = $this->memories->get_today_posts();
+
+		// Setup subject
+		$subject 	= sprintf( __( '%s %s Today (%s) in History', 'memories' ), get_bloginfo( 'name' ), ngettext( 'Post', 'Posts', $today_posts->post_count ), date( 'F j', current_time( 'timestamp' ) ));
 
 		ob_start();
-			
-			// Get today's posts
-			$today_posts = $this->memories->get_today_posts();
 
 			// Display today's posts content
 			$this->templates->today_posts( $today_posts );
