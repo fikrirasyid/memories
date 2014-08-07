@@ -38,11 +38,11 @@ class Memories_Templates{
 						<tr>
 							<td>
 								<!-- post content -->
-								<table style="background: white; width: 540px; margin-bottom: 10px;">
+								<table style="background: white; width: 540px; margin-bottom: 10px;" cellspacing="0">
 									
 									<?php if( has_post_thumbnail( $post->ID ) ) : ?>
 									<tr>
-										<td style="padding: 15px; border-bottom: 1px solid #efefef;">
+										<td style="padding: 15px; border: 1px solid #efefef; border-bottom: none; background: #fafafa;">
 											<?php 
 												$post_thumbnail_id = get_post_thumbnail_id( $post->ID );
 												$post_thumbnail_src = wp_get_attachment_image_src( $post_thumbnail_id, 'large' );
@@ -56,7 +56,7 @@ class Memories_Templates{
 									<?php endif; ?>
 
 									<tr>
-										<td style="padding: 15px;" width="300">
+										<td style="padding: 15px; border: 1px solid #efefef;" width="300">
 
 											<h3 style="margin-top: 0;">
 												<a href="<?php echo get_permalink( $post->ID ); ?>" title="<?php echo $post->post_title; ?>">

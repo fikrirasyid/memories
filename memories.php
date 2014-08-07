@@ -83,14 +83,14 @@ class Memories_Setup{
 
 		$message = ob_get_clean();
 
+		echo $message;
+
 		add_filter( 'wp_mail_content_type', array( $this, 'html_content_type' ) );
 
 		$sent = wp_mail( $to, $subject, $message );
 
 		remove_filter( 'wp_mail_content_type', array( $this, 'html_content_type' ) );
 
-		var_dump( $sent );
-		echo 'sent bro';
 		die();
 	}
 
