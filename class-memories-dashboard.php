@@ -34,7 +34,7 @@ class Memories_Dashboard{
 		?>
 		<div class="wrap">
 			<h2><?php _e( 'Memories', 'memories' ); ?></h2>
-			<p>What you posted this day in history:</p>
+			<p><?php printf( __( 'Hi, this is what is being posted in this blog today (<cite>%s</cite>) in history:', 'memories' ), date( 'l, F j, Y', current_time( 'timestamp' ) ) ); ?></p>
 
 			<?php 
 				// Get today's posts
