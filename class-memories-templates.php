@@ -70,7 +70,7 @@ class Memories_Templates{
 											</a>
 										</h3>
 
-										<h4><?php the_date( 'l, M j, Y H:i'); ?></h4>
+										<h4><?php the_time( 'l, M j, Y H:i'); ?></h4>
 
 										<?php 
 											add_filter( 'the_content', array( $this, 'modified_content' ) );
