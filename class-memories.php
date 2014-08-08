@@ -38,6 +38,7 @@ class Memories{
 	 */
 	function get_posts( $day = 1, $month = 1 ){
 		$posts = new WP_Query( array(
+			'ignore_sticky_posts' => true,
 			'date_query' => array(
 				array(
 					'day'	=> $day,
