@@ -10,7 +10,7 @@ class Memories_Templates{
 	 */
 	function today_posts( $posts ){
 		// Get current timestamp
-		$current_timestamp = current_time( 'timestamp' );
+		$current_timestamp = current_time( 'timestamp', wp_timezone_override_offset() );
 
 		// Loop the posts, if there's any
 		if( $posts->have_posts() ){
