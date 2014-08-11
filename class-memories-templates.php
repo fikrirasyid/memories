@@ -46,29 +46,65 @@ class Memories_Templates{
 							<!-- post content -->
 							<table style="background: white; width: 540px; margin-bottom: 10px;" cellspacing="0">
 								
-								<?php if( has_post_thumbnail() ) : ?>
-								<tr>
-									<td style="padding: 15px; border: 1px solid #efefef; border-bottom: none; background: #fafafa;">
-										<?php 
-											$post_thumbnail_id = get_post_thumbnail_id( get_the_ID() );
-											$post_thumbnail_src = wp_get_attachment_image_src( $post_thumbnail_id, 'large' );
+								<?php if( has_post_thumbnail() && 'video' != get_post_format( get_the_ID() ) ){ ?>
+									<tr>
+										<td style="padding: 15px; border: 1px solid #efefef; border-bottom: none; background: #fafafa;">
+											<?php 
+												$post_thumbnail_id = get_post_thumbnail_id( get_the_ID() );
+												$post_thumbnail_src = wp_get_attachment_image_src( $post_thumbnail_id, 'large' );
 
-											if( isset( $post_thumbnail_src[0] ) ){
-												echo "<img src='{$post_thumbnail_src[0]}' style='width: 100%;' />";															
-											}
+												if( isset( $post_thumbnail_src[0] ) ){
+													echo "<img src='{$post_thumbnail_src[0]}' style='width: 100%;' />";															
+												}
+											?>
+										</td>
+									</tr>
+								<?php 
+								} elseif( 'link' == get_post_format( get_the_ID() ) ) { // Link
+
+									$entry_custom_meta = get_post_custom( get_the_ID() ); 
+									
+									if( isset( $entry_custom_meta['_format_link_url'] ) ){
 										?>
-									</td>
-								</tr>
-								<?php endif; ?>
+										<tr>
+											<td style="padding: 15px; border: 1px solid #efefef; border-bottom: none; background: #fafafa;">
+												<h3 style="margin: 0;">
+													<?php printf( __( '<a href="%1$s" rel="bookmark">link to %2$s</a>', 'memories' ), $entry_custom_meta['_format_link_url'][0], $this->get_domain_name( $entry_custom_meta['_format_link_url'][0] ) )?>
+												</h3>
+											</td>
+										</tr>
+										<?php
+									}			
+
+								} elseif( 'video' == get_post_format( get_the_ID() ) ){ // Video 
+
+									$video = get_post_meta( get_the_ID(), '_format_video_embed', true );
+									
+									if( $video ){
+										?>
+										<tr>
+											<td style="padding: 15px; border: 1px solid #efefef; border-bottom: none; background: #fafafa;">
+												<?php $this->get_video_embed_code( $video ); ?>
+											</td>
+										</tr>
+										<?php										
+									
+									}
+								}
+								?>
 
 								<tr>
-									<td style="padding: 15px; border: 1px solid #efefef; line-height: 1.4;" width="300">
-
-										<h3 style="margin-top: 0;">
-											<a href="<?php the_permalink(); ?>" title="<?php echo the_title(); ?>">
+									<td style="padding: 15px; border: 1px solid #efefef; border-bottom: none;">
+										<h3 style="margin-top: 0; margin-bottom: 0;">
+											<a href="<?php the_permalink(); ?>" title="<?php echo the_title(); ?>" style="text-decoration: none;">
 												<?php the_title(); ?>
 											</a>
 										</h3>
+									</td>
+								</tr>								
+
+								<tr>
+									<td style="padding: 15px; border: 1px solid #efefef; line-height: 1.4;" width="300">
 
 										<h4><?php the_time( 'l, M j, Y H:i'); ?></h4>
 
@@ -143,5 +179,47 @@ class Memories_Templates{
 		. '<p class="wp-caption-text">' . $attr['caption'] . '</p>'
 		. '</div>';
 
+	}	
+
+	/**
+	 * Get embed code based on string (path to file, embed code, oEmbed supported video link)
+	 * 
+	 * @param string path to file || embed code || oEmbed-supported video link
+	 * 
+	 * @return void
+	 */
+	function get_video_embed_code( $video ){
+		$video_extensions = array( 'mp4', 'ogg' );
+		$video_info = pathinfo( $video );
+
+		// Check if this should be displayed using video tag
+		if( isset( $video_info['extension'] ) && in_array( $video_info['extension'], $video_extensions) ){
+
+			echo "<video controls><source src='$video'></source></video>";
+
+		} elseif( strpos( $video, '<iframe' ) !== false ){
+			// If this is embed code
+			echo $video;
+		} else {
+			// Otherwise, assume that this is oEmbed link and get the content using built-in oEmbed mechanism
+			echo wp_oembed_get( $video );
+		}
+	}
+
+	/**
+	 * Returns domain name of given URL
+	 * 
+	 * @param string url
+	 * 
+	 * @return string domain name
+	 */
+	function get_domain_name( $url ){
+		$parsed_url = parse_url( $url );
+
+		if( !isset( $parsed_url['scheme'] ) ){
+			$url = 'http://' . $url;
+		}
+
+		return parse_url( $url , PHP_URL_HOST );	
 	}	
 }
